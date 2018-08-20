@@ -85,7 +85,14 @@ class InpaintCAModel(Model):
             x = gen_conv(x, 4*cnum, 3, rate=4, name='xconv8_atrous')
             x = gen_conv(x, 4*cnum, 3, rate=8, name='xconv9_atrous')
             x = gen_conv(x, 4*cnum, 3, rate=16, name='xconv10_atrous')
-            x_hallu = x
+            
+			#turn off hallucination pathway for ablation study
+            zeros = tf.zeros(
+    shape=x.shape,
+    dtype=tf.float32,
+    name=None
+)
+            x_hallu = tf.multiply(x,zeros) #bit-wise multiplication			
             # attention branch
             x = gen_conv(xnow, cnum, 5, 1, name='pmconv1')
             x = gen_conv(x, cnum, 3, 2, name='pmconv2_downsample')
