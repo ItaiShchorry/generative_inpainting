@@ -85,8 +85,15 @@ class InpaintCAModel(Model):
             x = gen_conv(x, 4*cnum, 3, rate=4, name='xconv8_atrous')
             x = gen_conv(x, 4*cnum, 3, rate=8, name='xconv9_atrous')
             x = gen_conv(x, 4*cnum, 3, rate=16, name='xconv10_atrous')
-            x_hallu = x 
+#       	x_hallu = x 
             
+			#turn off hallucination pathway for ablation study
+            zeros = tf.zeros(
+    shape=x.shape,
+    dtype=tf.float32,
+    name=None
+)
+            x_hallu = tf.multiply(x,zeros) #bit-wise multiplication			
             # attention branch
             x = gen_conv(xnow, cnum, 5, 1, name='pmconv1')
             x = gen_conv(x, cnum, 3, 2, name='pmconv2_downsample')
@@ -98,17 +105,17 @@ class InpaintCAModel(Model):
             x, offset_flow = contextual_attention(x, x, mask_s, 3, 1, rate=2)
             x = gen_conv(x, 4*cnum, 3, 1, name='pmconv9')
             x = gen_conv(x, 4*cnum, 3, 1, name='pmconv10')
-            
-			#turn off attention pathway for ablation study
-            zeros = tf.zeros(
-    shape=x.shape,
-    dtype=tf.float32,
-    name=None
-)
-    
-            pm = tf.multiply(x,zeros)
+            pm = x
             x = tf.concat([x_hallu, pm], axis=3)
 
+			#turn off attention pathway for ablation study
+#            zeros = tf.zeros(
+#    shape=x.shape,
+#    dtype=tf.float32,
+#    name=None
+#)
+#            pm = tf.multiply(x,zeros)
+#            x = tf.concat([x_hallu, pm], axis=3)
             x = gen_conv(x, 4*cnum, 3, 1, name='allconv11')
             x = gen_conv(x, 4*cnum, 3, 1, name='allconv12')
             x = gen_deconv(x, 2*cnum, name='allconv13_upsample')
