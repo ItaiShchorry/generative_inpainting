@@ -13,7 +13,7 @@ from neuralgym.ops.summary_ops import *
 
 logger = logging.getLogger()
 np.random.seed(2018)
-
+USE_GATED_CONVOLUTION = True
 
 @add_arg_scope
 def gen_conv(x, cnum, ksize, stride=1, rate=1, name='conv',
@@ -40,9 +40,19 @@ def gen_conv(x, cnum, ksize, stride=1, rate=1, name='conv',
         p = int(rate*(ksize-1)/2)
         x = tf.pad(x, [[0,0], [p, p], [p, p], [0,0]], mode=padding)
         padding = 'VALID'
-    x = tf.layers.conv2d(
-        x, cnum, ksize, stride, dilation_rate=rate,
-        activation=activation, padding=padding, name=name)
+    if USE_GATED_CONVOLUTION:
+        x1 = tf.layers.conv2d(
+            x, cnum, ksize, stride, dilation_rate=rate,
+            activation=activation, padding=padding)
+        x2 = tf.layers.conv2d(
+            x, cnum, ksize, stride, dilation_rate=rate,
+            activation=tf.nn.sigmoid, padding=padding)
+        x = tf.multiply(x2 , x1, name=name)
+    
+    else:     
+        x = tf.layers.conv2d(
+            x, cnum, ksize, stride, dilation_rate=rate,
+            activation=activation, padding=padding, name=name)
     return x
 
 

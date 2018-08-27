@@ -146,12 +146,12 @@ def get_files_in_dir(d, full_path=False):
     return [o for o in os.listdir(d) if os.path.isfile(os.path.join(d, o))]
 
 
-ORIGINAL_WEIGHTS_64_64_100000_ITERS = "model_logs/20180805072004313626_arik-olsh-gpu_celeba_NORMAL_wgan_gp_placesa_small_log_dir"  # /snap-80000"
+ORIGINAL_WEIGHTS_64_64_100000_ITERS = "model_logs/without_attention"  # /snap-80000"
 
 
 def run_test():
     test_dir = "test_cases"
-    test_name = "run1"
+    test_name = "without_attention_2"
     checkpoint_dir = ORIGINAL_WEIGHTS_64_64_100000_ITERS
     mask_files = get_files_in_dir(test_dir, full_path=True)
     for mask in mask_files:
@@ -170,7 +170,7 @@ def run_test():
 
 
 # create_test_imgs()
-run_test()
+#run_test()
 
 ####### comments #######
 
