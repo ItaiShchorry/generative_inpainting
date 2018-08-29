@@ -146,12 +146,12 @@ def get_files_in_dir(d, full_path=False):
     return [o for o in os.listdir(d) if os.path.isfile(os.path.join(d, o))]
 
 
-ORIGINAL_WEIGHTS_64_64_100000_ITERS = "model_logs/without_attention"  # /snap-80000"
+ORIGINAL_WEIGHTS_64_64_100000_ITERS = "model_logs/without_hallucination_9"  # /snap-80000"
 
 
 def run_test():
     test_dir = "test_cases"
-    test_name = "without_attention_2"
+    test_name = "without_hallucination_9_merged"
     checkpoint_dir = ORIGINAL_WEIGHTS_64_64_100000_ITERS
     mask_files = get_files_in_dir(test_dir, full_path=True)
     for mask in mask_files:
@@ -170,7 +170,7 @@ def run_test():
 
 
 # create_test_imgs()
-#run_test()
+#run_test() #remember to sort folders before reunning
 
 ####### comments #######
 
